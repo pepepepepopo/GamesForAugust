@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Snake</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --fg: #ffffff;
+      --accent: #00ff99;
+      --glow: 0 0 10px var(--accent), 0 0 20px var(--accent), 0 0 30px var(--accent);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 3rem;
+      color: var(--accent);
+      text-shadow: var(--glow);
+      margin-bottom: 1rem;
+    }
+    canvas {
+      background: #111;
+      border: 3px solid var(--accent);
+      box-shadow: var(--glow);
+      border-radius: 10px;
+      max-width: 90vw;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Snake</h1>
+  <canvas id="game" width="400" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+
+    const grid = 20;
+    let snake = [{ x: 160, y: 160 }];
+    let dx = grid, dy = 0;
+    let apple = {
+      x: Math.floor(Math.random() * 20) * grid,
+      y: Math.floor(Math.random() * 20) * grid
+    };
+    let score = 0;
+
+    function gameLoop() {
+      const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+      snake.unshift(head);
+
+      if (head.x === apple.x && head.y === apple.y) {
+        score++;
+        apple = {
+          x: Math.floor(Math.random() * 20) * grid,
+          y: Math.floor(Math.random() * 20) * grid
+        };
+      } else {
+        snake.pop();
+      }
+
+      if (
+        head.x < 0 || head.x >= canvas.width ||
+        head.y < 0 || head.y >= canvas.height ||
+        snake.slice(1).some(s => s.x === head.x && s.y === head.y)
+      ) {
+        alert("Game Over! Score: " + score);
+        snake = [{ x: 160, y: 160 }];
+        dx = grid; dy = 0;
+        score = 0;
+      }
+
+      ctx.fillStyle = "#111";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#0f0";
+      snake.forEach(part => {
+        ctx.fillRect(part.x, part.y, grid - 2, grid - 2);
+      });
+
+      ctx.fillStyle = "red";
+      ctx.fillRect(apple.x, apple.y, grid - 2, grid - 2);
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -grid; }
+      if (e.key === "ArrowDown" && dy === 0) { dx = 0; dy = grid; }
+      if (e.key === "ArrowLeft" && dx === 0) { dx = -grid; dy = 0; }
+      if (e.key === "ArrowRight" && dx === 0) { dx = grid; dy = 0; }
+    });
+
+    setInterval(gameLoop, 100);
+  </script>
+</body>
+</html>
