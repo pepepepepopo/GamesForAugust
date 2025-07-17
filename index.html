@@ -1,27 +1,62 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>GamesForAugust</title>
-        <link rel="stylesheet" href="styles.css">
-        <style>
-            .games-list a {
-                padding: 1.5%;
-                background-color: lightblue;
-                margin-right: 10px;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                font-size: medium;
-                color: black;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>GamesForAugust</h1>
-        <h2><a href="chat/index.html">Public Chat</a></h2>
-        <div class="games-list">
-            <a href="games/breakout/index.html">Breakout</a>
-            <a href="games/pong/index.html">Pong</a>
-            <a href="games/snake/index.html">Snake</a>
-        </div>
-    </body>
+<head>
+  <meta charset="UTF-8">
+  <title>GamesForAugust</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .games-list a {
+      padding: 1.5%;
+      background-color: lightblue;
+      margin-right: 10px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: medium;
+      color: black;
+      display: inline-block;
+      margin-bottom: 10px;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    #searchInput {
+      display: block;
+      margin: 20px auto;
+      padding: 10px;
+      font-size: 16px;
+      width: 80%;
+      max-width: 400px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>GamesForAugust</h1>
+  <h2><a href="chat/index.html">Public Chat</a></h2>
+
+  <!-- 🔍 Search Input -->
+  <input type="text" id="searchInput" placeholder="Search for a game...">
+
+  <div class="games-list" id="gamesList">
+    <a href="games/breakout/index.html">Breakout</a>
+    <a href="games/pong/index.html">Pong</a>
+    <a href="games/snake/index.html">Snake</a>
+  </div>
+
+  <!-- 💡 Search Script -->
+  <script>
+    const searchInput = document.getElementById("searchInput");
+    const gamesList = document.getElementById("gamesList");
+    const links = gamesList.getElementsByTagName("a");
+
+    searchInput.addEventListener("input", () => {
+      const search = searchInput.value.toLowerCase();
+      for (let i = 0; i < links.length; i++) {
+        const link = links[i];
+        const text = link.textContent.toLowerCase();
+        link.style.display = text.includes(search) ? "inline-block" : "none";
+      }
+    });
+  </script>
+</body>
 </html>
