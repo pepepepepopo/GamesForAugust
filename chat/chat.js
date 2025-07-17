@@ -49,5 +49,5 @@ function escapeHTML(text) {
 }
 
 // Refresh every 2 seconds
-setInterval(loadMessages, 2000);
+setInterval(loadMessages, 1000);
 window.onload = loadMessages;
