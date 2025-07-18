@@ -1,43 +1,42 @@
-const messageInput = document.getElementById("messageInput");
-const messagesDiv = document.getElementById("messages");
-const username = localStorage.getItem("chatUsername");
+const API_URL = "https://script.google.com/macros/s/AKfycbwHimJXM4MZCnJKr0t5Lu6IXbEymBGKAGMI5X6vO9S0J4B_dA1H9JXkDCiEqcCht5Q/exec";
+const badWords = ["fuck", "shit", "bitch", "ass", "cunt", "nigger", "nigga", "whore", "slut", "dick", "fag"]; // customize this
 
-const ENDPOINT = "https://script.google.com/macros/s/AKfycbwxlJRiZkduOemZjqBFfBhsiglSvQnmVPC6N-XuFlqsZBIFU13fBMj7gOMAP8ohYjcAGA/exec"; // Replace this
-
-const badWords = ["fuck", "shit", "bitch", "ass", "dick", "cunt", "fag", "nigga", "nigger", "whore", "slut", "retard"];
-function filterBadWords(text) {
-  return text.replace(new RegExp(`\\b(${badWords.join("|")})\\b`, "gi"), "***");
+function sanitize(text) {
+  let regex = new RegExp(`\\b(${badWords.join("|")})\\b`, "gi");
+  return text.replace(regex, "***");
 }
 
-function sendMessage() {
-  const raw = messageInput.value.trim();
-  if (!raw) return;
-
-  const filtered = filterBadWords(raw);
-  const params = new URLSearchParams({
-    action: "send",
-    user: username,
-    msg: filtered,
-  });
-
-  fetch(`${ENDPOINT}?${params.toString()}`).then(() => {
-    messageInput.value = "";
-  });
-}
-
-function loadMessages() {
-  fetch(`${ENDPOINT}?action=get`)
-    .then((res) => res.json())
-    .then((data) => {
+function fetchMessages() {
+  fetch(`${API_URL}?action=get`)
+    .then(res => res.json())
+    .then(data => {
+      const messages = data.messages;
+      const messagesDiv = document.getElementById("messages");
       messagesDiv.innerHTML = "";
-      data.messages.forEach(msg => {
-        const p = document.createElement("p");
-        p.innerHTML = `<strong>${msg.user}</strong>: ${msg.text}`;
-        messagesDiv.appendChild(p);
+
+      messages.forEach(msg => {
+        const div = document.createElement("div");
+        div.textContent = `[${new Date(msg.time).toLocaleTimeString()}] ${msg.user}: ${msg.text}`;
+        messagesDiv.appendChild(div);
       });
+
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
 }
 
-setInterval(loadMessages, 1000);
-loadMessages();
+function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const text = sanitize(input.value.trim());
+  const user = localStorage.getItem("chatUsername");
+
+  if (text) {
+    fetch(`${API_URL}?action=send&user=${encodeURIComponent(user)}&msg=${encodeURIComponent(text)}`)
+      .then(() => {
+        input.value = "";
+        fetchMessages();
+      });
+  }
+}
+
+setInterval(fetchMessages, 1000);
+fetchMessages();
