@@ -1,0 +1,80 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Break 'n' Blocks</title>
+    <link rel="icon" type="image/png" href="/c9ab83fe-1f29-442e-af51-f77a4d7c36fa.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Jiyath5516F/Minecraft-CSS@main/dist/minecraft-css-framework-v-1.0.0.css">
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        // Add an import map
+        const importMap = {
+            imports: {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        };
+        const script = document.createElement('script');
+        script.type = 'importmap';
+        script.textContent = JSON.stringify(importMap);
+        document.head.appendChild(script);
+    </script>
+</head>
+<body>
+    <div id="loadingScreen">
+        <div class="loading-content">
+            <h2 id="loadingText">Loading assets...</h2>
+            <div class="progress-bar">
+                <div id="loadingProgress" class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+    <div id="titleScreen" style="display: none;">
+        <div id="title-content">
+            <!-- The title/thumbnail is applied via CSS background -->
+        </div>
+        <div id="title-start-prompt">Click or Tap to Start</div>
+    </div>
+    <div id="debug-info" style="position: fixed; top: 5px; left: 5px; color: white; font-family: monospace; background: rgba(0,0,0,0.5); padding: 5px; z-index: 9999; display: none;"></div>
+    <canvas id="backgroundCanvas" style="position: absolute; top: 0; left: 0; z-index: -1;"></canvas>
+    <canvas id="gameCanvas" style="display: none;"></canvas>
+    <div id="enchantment-sparkle-container"></div>
+    <div id="collectible-effects-container"></div>
+    <div id="stats-popup" style="display: none;">
+        <div id="stats-content">
+            <h2>Personal Stats</h2>
+            <div id="stats-grid"></div>
+            <button id="stats-close-button">Close</button>
+        </div>
+    </div>
+    <div id="settings-popup" style="display: none;">
+        <div id="settings-content">
+            <h2>Settings</h2>
+            <div id="settings-grid">
+                <!-- Volume controls -->
+                <div class="setting-item">
+                    <label for="music-volume">Music Volume</label>
+                    <input type="range" id="music-volume" min="0" max="1" step="0.01" value="1">
+                </div>
+                <div class="setting-item">
+                    <label for="sfx-volume">SFX Volume</label>
+                    <input type="range" id="sfx-volume" min="0" max="1" step="0.01" value="1">
+                </div>
+                <!-- Language selection -->
+                <div class="setting-item">
+                    <label for="language-select">Language</label>
+                    <select id="language-select">
+                        <option value="en">English</option>
+                        <option value="es" disabled>Español (Coming Soon)</option>
+                        <option value="fr" disabled>Français (Coming Soon)</option>
+                    </select>
+                </div>
+            </div>
+            <button id="reset-progress-button">Reset All Progress</button>
+            <button id="settings-close-button">Close</button>
+        </div>
+    </div>
+    <audio id="background-music" loop></audio>
+    <script type="module" src="game.js"></script>
+</body>
+</html>
