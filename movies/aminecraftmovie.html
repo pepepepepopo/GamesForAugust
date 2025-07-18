@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Minecraft Movie</title>
+  <link rel="stylesheet" href="movie.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 90%;
+      max-width: 800px;
+      aspect-ratio: 4 / 3;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎬 Now Playing</h1>
+  <div class="video-wrapper">
+    <iframe 
+      src="https://drive.google.com/file/d/1Oppg2lJlwwqKmPK8z4HNcdeiEyf6GaHq/preview" 
+      allow="autoplay"
+      allowfullscreen
+    ></iframe>
+  </div>
+</body>
+</html>
