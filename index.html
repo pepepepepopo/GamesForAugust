@@ -5,7 +5,8 @@
   <title>GamesForAugust</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    .games-list a {
+    .games-list a,
+    .movies-list a {
       padding: 1.5%;
       background-color: lightblue;
       margin-right: 10px;
@@ -28,6 +29,10 @@
       border: 1px solid #ccc;
       border-radius: 6px;
     }
+
+    h3 {
+      margin-top: 40px;
+    }
   </style>
 </head>
 <body>
@@ -35,8 +40,9 @@
   <h2><a href="chat/index.html">Public Chat</a></h2>
 
   <!-- 🔍 Search Input -->
-  <input type="text" id="searchInput" placeholder="Search for a game...">
+  <input type="text" id="searchInput" placeholder="Search for a game or movie...">
 
+  <h3>Games</h3>
   <div class="games-list" id="gamesList">
     <a href="games/breakout/index.html">Breakout</a>
     <a href="games/minecraft/index.html">Minecraft</a>
@@ -46,19 +52,30 @@
     <a href="games/stickmanbattle/">Stickman Battle</a>
   </div>
 
+  <h3>Movies</h3>
+  <div class="movies-list" id="moviesList">
+    <a href="movies/aminecraftmovie.html">A Minecraft Movie</a>
+    <!-- Add more movies here -->
+  </div>
+
   <!-- 💡 Search Script -->
   <script>
     const searchInput = document.getElementById("searchInput");
-    const gamesList = document.getElementById("gamesList");
-    const links = gamesList.getElementsByTagName("a");
+
+    function filterLinks(containerId) {
+      const container = document.getElementById(containerId);
+      const links = container.getElementsByTagName("a");
+      const search = searchInput.value.toLowerCase();
+
+      for (let i = 0; i < links.length; i++) {
+        const text = links[i].textContent.toLowerCase();
+        links[i].style.display = text.includes(search) ? "inline-block" : "none";
+      }
+    }
 
     searchInput.addEventListener("input", () => {
-      const search = searchInput.value.toLowerCase();
-      for (let i = 0; i < links.length; i++) {
-        const link = links[i];
-        const text = link.textContent.toLowerCase();
-        link.style.display = text.includes(search) ? "inline-block" : "none";
-      }
+      filterLinks("gamesList");
+      filterLinks("moviesList");
     });
   </script>
 </body>
