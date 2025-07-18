@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000; /* Black background for any letterboxing */
+    color: white;
+    overflow: hidden;
+}
+
+#game-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #87CEEB; /* Light blue sky */
+    position: relative;
+    margin: 0 auto; /* Center in case of aspect ratio constraints */
+}
+
+#game-container.hidden {
+    display: none;
+}
+
+#game-world {
+    flex-grow: 1;
+    position: relative;
+}
+
+.floor {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 15%; /* Height of the grass floor */
+    background-color: #228B22; /* Forest Green */
+}
+
+.hidden {
+    display: none;
+}

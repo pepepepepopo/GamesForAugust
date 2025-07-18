@@ -1,0 +1,160 @@
+.stickman {
+    position: absolute;
+    width: 50px;
+    height: 70px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: left 0.1s linear, top 0.1s linear;
+    transform-origin: bottom center;
+}
+
+.player {
+    background-image: url('/Stickman.png');
+}
+
+.player.with-sword {
+    background-image: url('/Stickmanwithsword.png');
+}
+.player.with-gun {
+    background-image: url('/Stickmanwithgun.png');
+}
+.player.sniper {
+    background-image: url('/SniperStickman.png');
+}
+.player.rocket-launcher {
+    background-image: url('/RocketlauncherStickman.png');
+}
+.player.on-car {
+    background-image: url('/Stickmanoncar.png');
+    width: 100px;
+    height: 80px;
+}
+.player.on-car.with-sword {
+    background-image: url('/Stickmanoncarwithsword.png');
+    width: 100px;
+    height: 80px;
+}
+.player.on-car.with-gun {
+    background-image: url('/Stickmanoncarwithgun.png');
+    width: 100px;
+    height: 80px;
+}
+.player.medic {
+    background-image: url('/Stickmanmedic.png');
+}
+.player.on-car.medic {
+    background-image: url('/Stickmanmediconcar.png');
+    width: 100px;
+    height: 80px;
+}
+.player.bomb {
+    background-image: url('/BombStickMan.png');
+}
+
+.player.on-gun-plane {
+    background-image: url('/Stickmanongunplane.png');
+    width: 120px;
+    height: 60px;
+    z-index: 35;
+}
+
+.player.on-bomb-plane {
+    background-image: url('/Stickmanonbombplane.png');
+    width: 120px;
+    height: 60px;
+    z-index: 35;
+}
+
+.enemy {
+    background-image: url('/EnemyStickman.png');
+    transform: scaleX(-1); /* Flip enemy to face left */
+}
+
+.enemy.with-sword {
+    background-image: url('/EnemyStickmanwithSword.png');
+}
+.enemy.with-gun {
+    background-image: url('/EnemyStickmanwithGun.png');
+}
+.enemy.bomb {
+    background-image: url('/BombEnemyStickman.png');
+}
+.enemy.on-car {
+    background-image: url('/EnemyStickmanoncar.png');
+    width: 100px;
+    height: 80px;
+}
+.enemy.on-car.with-sword {
+    background-image: url('/Enemystickmanwithswordoncar.png');
+    width: 100px;
+    height: 80px;
+}
+.enemy.on-car.with-gun {
+    background-image: url('/Enemystickmanwithgunoncar.png');
+    width: 100px;
+    height: 80px;
+}
+.enemy.gorilla {
+    background-image: url('/EnemyGorilla.png');
+    width: 120px;
+    height: 100px;
+}
+
+.health-bar-container {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 8px;
+    background-color: #555;
+    border: 1px solid #000;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.health-bar {
+    height: 100%;
+    background-color: red;
+    width: 100%;
+    transition: width 0.2s;
+}
+
+.player .health-bar {
+    background-color: #4CAF50; /* Green for player */
+}
+
+/* Gorilla health bar should be wider */
+.enemy.gorilla .health-bar-container {
+    width: 100px;
+}
+
+.stickman.custom-stickman {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 2px solid #FFD700;
+    border-radius: 5px;
+}
+
+.custom-shop-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-shop-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}

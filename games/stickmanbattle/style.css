@@ -1,0 +1,10 @@
+/* Main CSS file - imports all style modules */
+@import url('styles/base.css');
+@import url('styles/screens.css');
+@import url('styles/ui.css');
+@import url('styles/stickmen.css');
+@import url('styles/animations.css');
+@import url('styles/game-objects.css');
+@import url('styles/modals.css');
+
+/* removed all original styles - they have been moved to organized modules */

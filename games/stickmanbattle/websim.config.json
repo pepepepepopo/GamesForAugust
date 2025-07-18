@@ -1,0 +1,8 @@
+{
+  "database": {
+    "schema": {
+      // removed scores_v3 table
+    }
+  }
+}
+

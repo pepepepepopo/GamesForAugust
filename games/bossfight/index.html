@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boss Battle Survival</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="game-container">
+    <div id="health-bar">
+      <div id="health-fill"></div>
+    </div>
+    <div id="player"></div>
+    <div id="boss"></div>
+    <div id="game-over" class="hidden">
+      <h1>Game Over</h1>
+      <p>You survived for <span id="final-time">0</span> seconds!</p>
+      <button onclick="restartGame()">Play Again</button>
+    </div>
+    <div id="timer">0s</div>
+    <div id="audio-controls">
+      <button id="music-toggle">
+        <span class="music-on">🔊</span>
+        <span class="music-off hidden">🔇</span>
+      </button>
+    </div>
+  </div>
+  <audio id="background-music" loop>
+    <source src="Dummy UNDERTALE OST.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="phase2-music" loop>
+    <source src="Undertale OST 080 - Finale.mp3" type="audio/mpeg">
+  </audio>
+  <script src="main.js"></script>
+</body>
+</html>

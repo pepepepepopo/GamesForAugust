@@ -1,0 +1,244 @@
+/* --- Shop Modal Styles --- */
+#shop-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+#shop-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#shop-container {
+    background-color: #333;
+    border: 3px solid #666;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+#shop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    color: white;
+    border-bottom: 2px solid #555;
+    padding-bottom: 10px;
+}
+
+#shop-header h2 {
+    margin: 0;
+    font-size: 28px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+#shop-search {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #777;
+    background-color: #444;
+    color: white;
+    font-size: 16px;
+    width: 200px;
+}
+
+#close-shop-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#shop-items-container {
+    display: flex;
+    overflow-x: auto;
+    padding: 15px 5px;
+    gap: 20px;
+}
+
+/* Scrollbar styling for a better look */
+#shop-items-container::-webkit-scrollbar {
+    height: 10px;
+}
+#shop-items-container::-webkit-scrollbar-track {
+    background: #222;
+    border-radius: 5px;
+}
+#shop-items-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+#shop-items-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.shop-item {
+    background-color: #444;
+    border: 2px solid #777;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.shop-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0,0,0,0.4);
+}
+
+.shop-item-image {
+    width: 100px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0 auto 10px;
+}
+
+.shop-item-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.shop-item-cost {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #FFD700;
+}
+
+.shop-item-cost img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.buy-btn {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+.buy-btn:disabled {
+    background-color: #9E9E9E;
+    cursor: not-allowed;
+}
+
+/* --- Settings Modal Styles --- */
+#settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 300;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+#settings-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#settings-container {
+    background-color: #333;
+    border: 3px solid #666;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    color: white;
+}
+
+#settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #555;
+    padding-bottom: 10px;
+}
+
+#settings-header h2 {
+    margin: 0;
+    font-size: 28px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+#close-settings-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#settings-content {
+    padding: 15px 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.setting-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.setting-item label {
+    font-size: 1.2em;
+    width: 200px;
+    flex-shrink: 0;
+}
+
+.setting-item input[type="range"] {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.setting-item span {
+    font-size: 1.1em;
+    width: 60px;
+    text-align: right;
+}

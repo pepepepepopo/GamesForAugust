@@ -1,0 +1,230 @@
+.stickman.punching {
+    animation: punch-animation 0.3s ease-in-out;
+}
+
+.stickman.healing {
+    animation: heal-animation 0.6s ease-in-out;
+}
+
+@keyframes heal-animation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1) rotate(-5deg); filter: drop-shadow(0 0 8px #90ee90); }
+    100% { transform: scale(1); }
+}
+
+.stickman.shooting {
+    animation: shoot-animation 0.5s ease-in-out;
+}
+
+@keyframes shoot-animation {
+    0% { transform: scale(1); }
+    20% { transform: scale(1.05) translateX(2px); }
+    100% { transform: scale(1); }
+}
+
+.stickman.exploding {
+    animation: explode-animation 0.5s forwards;
+}
+
+@keyframes explode-animation {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes punch-animation {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
+    100% { transform: translateX(0); }
+}
+
+.enemy.punching {
+    animation: punch-animation-enemy 0.3s ease-in-out;
+}
+
+@keyframes punch-animation-enemy {
+    0% { transform: translateX(0) scaleX(-1); }
+    50% { transform: translateX(-10px) scaleX(-1); }
+    100% { transform: translateX(0) scaleX(-1); }
+}
+
+.player.dying {
+    animation: die-animation-player 1s forwards;
+    transition: none;
+}
+
+.enemy.dying {
+    animation: die-animation-enemy 1s forwards;
+    transition: none;
+}
+
+@keyframes die-animation-player {
+    0% {
+        transform: rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: rotate(-90deg);
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(-90deg) translateY(20px);
+        opacity: 0;
+    }
+}
+
+@keyframes die-animation-enemy {
+     0% {
+        transform: scaleX(-1) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scaleX(-1) rotate(90deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scaleX(-1) rotate(90deg) translateY(20px);
+        opacity: 0;
+    }
+}
+
+.heal-effect {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background-image: url('/HealEffect.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 55;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0);
+    animation: heal-effect-animation 0.6s ease-out forwards;
+}
+
+@keyframes heal-effect-animation {
+    0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1) rotate(180deg); }
+    100% { transform: translate(-50%, -50%) scale(0) rotate(360deg); opacity: 0; }
+}
+
+.buy-coin-effect {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-image: url('/Coin1.png');
+    background-size: contain;
+    border-radius: 50%;
+    z-index: 100;
+    pointer-events: none; 
+    transition: transform 0.5s cubic-bezier(0.5, -0.5, 1, 1), opacity 0.5s ease-out;
+}
+
+.explosion-effect {
+    position: absolute;
+    width: 100px; 
+    height: 100px;
+    background-color: orange;
+    border-radius: 50%;
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(0);
+    animation: explosion-visual 0.4s ease-out forwards;
+    z-index: 50;
+}
+
+@keyframes explosion-visual {
+    from {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0.7;
+    }
+    to {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+.stickman.smashing {
+    animation: smash-animation 0.8s ease-in-out;
+}
+
+@keyframes smash-animation {
+    0% { transform: scale(1) translateY(0); }
+    30% { transform: scale(1.1) translateY(-20px); }
+    60% { transform: scale(1.2) translateY(0); }
+    100% { transform: scale(1) translateY(0); }
+}
+
+.enemy.smashing {
+    animation: smash-animation-enemy 0.8s ease-in-out;
+}
+
+@keyframes smash-animation-enemy {
+    0% { transform: scaleX(-1) scale(1) translateY(0); }
+    30% { transform: scaleX(-1) scale(1.1) translateY(-20px); }
+    60% { transform: scaleX(-1) scale(1.2) translateY(0); }
+    100% { transform: scaleX(-1) scale(1) translateY(0); }
+}
+
+.miss-effect {
+    position: absolute;
+    color: #ff0000;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    z-index: 60;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: miss-effect-animation 1s ease-out forwards;
+}
+
+@keyframes miss-effect-animation {
+    0% { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(1.5) translateY(-30px);
+        opacity: 0;
+    }
+}
+
+.sniper-effect {
+    position: absolute;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    z-index: 60;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: sniper-effect-animation 1.2s ease-out forwards;
+}
+
+@keyframes sniper-effect-animation {
+    0% { 
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 1;
+    }
+    20% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(1) translateY(-40px);
+        opacity: 0;
+    }
+}
+
+.rocket-projectile {
+    transition: none;
+    pointer-events: none;
+}
+
+.stickman.bombing {
+    animation: bomb-animation 1s ease-in-out;
+}
+
+@keyframes bomb-animation {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.05) translateY(-5px); }
+    70% { transform: scale(0.95) translateY(5px); }
+    100% { transform: scale(1); }
+}

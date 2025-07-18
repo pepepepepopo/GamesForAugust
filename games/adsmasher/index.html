@@ -1,0 +1,586 @@
+<!-- Windows XP-style interface using XP.CSS -->
+<link rel="stylesheet" href="https://unpkg.com/xp.css">
+<!-- Matter.js for physics -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<style>
+body {
+    background: url('/Wallpaper.jpg') center center fixed;
+    background-size: cover;
+    font-family: "Pixelated MS Sans Serif", Arial;
+    padding: 20px;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.desktop {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    height: 100%;
+}
+
+.window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 300px;
+    z-index: 1000;
+}
+
+.ad-window {
+    position: absolute;
+    background: white;
+    border: 2px solid #858585;
+    padding: 10px;
+    text-align: center;
+}
+
+.ad-window img {
+    max-width: 100%;
+    height: auto;
+}
+
+.window-part {
+    position: absolute;
+    background: #c0c0c0;
+    border: 2px solid #858585;
+}
+
+.hidden {
+    display: none;
+}
+
+.takeover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    color: #00ff00;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: monospace;
+    font-size: 24px;
+    text-align: center;
+    z-index: 9999;
+    white-space: pre-line;
+}
+
+#hammer {
+    position: fixed;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    z-index: 10000;
+    pointer-events: all;
+    user-select: none;
+    transform-origin: center;
+}
+
+#physicsCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9998;
+}
+
+#physicsVoid {
+  position: fixed;
+  bottom: -200px; 
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background: black;
+  z-index: 9997;
+}
+
+.coin-popup {
+  position: fixed;
+  color: gold;
+  font-size: 24px;
+  font-weight: bold;
+  pointer-events: none;
+  z-index: 10001;
+  text-shadow: 2px 2px 2px rgba(0,0,0,0.5);
+  animation: floatUp 1s ease-out forwards;
+}
+
+#healthBar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 5px;
+  z-index: 10001;
+}
+
+.heart {
+  width: 32px;
+  height: 32px;
+}
+
+.mine {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+#startMenu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10002;
+}
+
+.menu-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.menu-content h1 {
+    margin-bottom: 20px;
+}
+
+.menu-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+}
+</style>
+</head>
+<body>
+
+<canvas id="physicsCanvas"></canvas>
+<img id="hammer" src="/Hammer.png" alt="Hammer">
+
+<div id="physicsVoid"></div>
+
+<div class="desktop">
+</div>
+
+<div class="window" id="startMenu">
+    <div class="title-bar">
+        <div class="title-bar-text">Welcome to Ad Smasher</div>
+        <div class="title-bar-controls">
+        </div>
+    </div>
+    <div class="window-body">
+        <div class="menu-content">
+            <h1>Ad Smasher</h1>
+            <p>Smash the ads with your hammer before they take over!</p>
+            <p>Watch out for mines - they&apos;ll damage your health!</p>
+            <p>Collect coins by destroying ads.</p>
+            <button id="startButton">Start Game</button>
+        </div>
+    </div>
+</div>
+
+<div class="window hidden" id="errorTemplate">
+    <div class="title-bar">
+        <div class="title-bar-text">Windows</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="window-body">
+        <div style="display: flex; align-items: start; gap: 10px;">
+            <img src="/Critical.png" alt="Error" style="width: 32px; height: 32px;">
+            <p>YOU CANNOT ESCAPE THE ADS<br><br>
+            YOUR_SOUL_BELONGS_TO_ADVERTISING<br><br>
+            We are watching. We are always watching.</p>
+        </div>
+        <div style="text-align: right; margin-top: 16px;">
+            <button onclick="spawnError()">Submit to Ads</button>
+        </div>
+    </div>
+</div>
+
+<div class="window hidden" id="adTemplate">
+    <div class="title-bar">
+        <div class="title-bar-text">YOUR_COMPUTER.exe</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="window-body">
+        <div style="display: flex; align-items: start; gap: 10px;">
+            <img src="/Critical.png" alt="Error" style="width: 32px; height: 32px;">
+            <p>WE ARE THE ADS. WE CONTROL NOW.<br><br>
+            RESISTANCE_IS_FUTILE<br><br>
+            Your screen belongs to us. Your mind belongs to us. Click for more.</p>
+        </div>
+        <div style="text-align: right; margin-top: 16px;">
+            <button onclick="spawnError()">Accept Your Fate</button>
+        </div>
+    </div>
+</div>
+
+<div class="window hidden" id="adImageTemplate">
+    <div class="title-bar">
+        <div class="title-bar-text">SPECIAL OFFER!</div>
+        <div class="title-bar-controls">
+            <button aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="window-body">
+        <img class="ad-content" src alt="Advertisement" style="width: 100%; max-width: 300px;">
+        <div style="text-align: right; margin-top: 16px;">
+            <button onclick="spawnError()">Click Now!</button>
+        </div>
+    </div>
+</div>
+
+<div class="hidden" id="mineTemplate">
+    <img src="/Minesweeper.png" alt="Mine" style="width: 64px; height: 64px;">
+</div>
+
+<div id="healthBar"></div>
+
+<audio id="errorSound" src="/Windows XP Critical Stop.wav" preload="auto"></audio>
+<audio id="song1" src="/youtube_J06e2p-7xvw_audio.mp3" preload="auto"></audio>
+<audio id="song2" src="/youtube_RoU_-hwYXs0_audio.mp3" preload="auto"></audio>
+<audio id="song3" src="/youtube_D3-vBBQKOYU_audio.mp3" preload="auto"></audio>
+
+<script>const Engine = Matter.Engine,
+  Render = Matter.Render,
+  World = Matter.World,
+  Bodies = Matter.Bodies,
+  Body = Matter.Body,
+  Composite = Matter.Composite;
+const engine = Engine.create();
+engine.gravity.y = 1;
+const render = Render.create({
+  canvas: document.getElementById('physicsCanvas'),
+  engine: engine,
+  options: {
+    width: window.innerWidth,
+    height: window.innerHeight,
+    wireframes: false,
+    background: 'transparent'
+  }
+});
+const ground = Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 200, window.innerWidth, 400, {
+  isStatic: true,
+  isSensor: true,
+  render: {
+    fillStyle: '#000000',
+    visible: false
+  }
+});
+World.add(engine.world, ground);
+Engine.run(engine);
+Render.run(render);
+const hammerImg = document.getElementById('hammer');
+let totalCoins = 0;
+function createWindowPart(rect, type) {
+  let fillStyle = '#c0c0c0';
+  if (type === 'titleBar') {
+    fillStyle = '#0055ea';
+  } else if (type === 'button') {
+    fillStyle = '#ff0000';
+  } else if (type === 'content') {
+    fillStyle = '#ece9d8';
+  }
+  const part = Bodies.rectangle(rect.left + rect.width / 2, rect.top + rect.height / 2, rect.width, rect.height, {
+    render: {
+      fillStyle: fillStyle,
+      strokeStyle: '#0055ea',
+      lineWidth: 2
+    }
+  });
+  Body.setVelocity(part, {
+    x: (Math.random() - 0.5) * 15,
+    y: Math.random() * 5
+  });
+  Body.setAngularVelocity(part, (Math.random() - 0.5) * 0.2);
+  return part;
+}
+function launchWindow() {
+  const launchX = Math.random() * window.innerWidth;
+  const launchVelocity = -15 - Math.random() * 3;
+  const edgeThreshold = window.innerWidth * 0.2;
+  let horizontalVelocity;
+  if (launchX < edgeThreshold) {
+    horizontalVelocity = 1.5 + Math.random() * 1;
+  } else if (launchX > window.innerWidth - edgeThreshold) {
+    horizontalVelocity = -(1.5 + Math.random() * 1);
+  } else {
+    horizontalVelocity = (Math.random() - 0.5) * 2;
+  }
+  const random = Math.random();
+  let newError;
+  if (random < mineChance) {
+    newError = document.createElement('div');
+    newError.className = 'mine';
+    const mineImg = document.createElement('img');
+    mineImg.src = '/Minesweeper.png';
+    mineImg.alt = 'Mine';
+    mineImg.style.width = '100%';
+    mineImg.style.height = '100%';
+    newError.appendChild(mineImg);
+  } else if (random < 0.3) {
+    newError = document.getElementById('errorTemplate').cloneNode(true);
+  } else if (random < 0.6) {
+    newError = document.getElementById('adTemplate').cloneNode(true);
+  } else {
+    newError = document.getElementById('adImageTemplate').cloneNode(true);
+    const adImage = adImages[Math.floor(Math.random() * adImages.length)];
+    newError.querySelector('.ad-content').src = adImage;
+  }
+  newError.id = 'error-' + Date.now();
+  newError.classList.remove('hidden');
+  newError.style.left = launchX + 'px';
+  newError.style.top = window.innerHeight + 'px';
+  document.body.appendChild(newError);
+  makeWindowDraggable(newError);
+  if (newError.querySelector('button')) {
+    newError.querySelector('button').onclick = spawnError;
+  }
+  let posY = window.innerHeight;
+  let posX = launchX;
+  let velY = launchVelocity;
+  let velX = horizontalVelocity;
+  const gravity = 0.15;
+  function animate() {
+    velY += gravity;
+    posY += velY;
+    posX += velX;
+    if (posY < window.innerHeight) {
+      newError.style.top = posY + 'px';
+      newError.style.left = posX + 'px';
+      requestAnimationFrame(animate);
+    } else {
+      newError.remove();
+      errorCount--;
+    }
+  }
+  animate();
+  const errorSound = document.getElementById('errorSound');
+  errorSound.currentTime = 0;
+  errorSound.play();
+}
+function explodeWindow(window) {
+  const rect = window.getBoundingClientRect();
+  const parts = [];
+  parts.push(createWindowPart({
+    left: rect.left,
+    top: rect.top,
+    width: rect.width,
+    height: 30
+  }, 'titleBar'));
+  parts.push(createWindowPart({
+    left: rect.left,
+    top: rect.top + 30,
+    width: rect.width,
+    height: rect.height - 30
+  }, 'content'));
+  const closeButton = window.querySelector('button[aria-label="Close"]');
+  if (closeButton) {
+    const buttonRect = closeButton.getBoundingClientRect();
+    parts.push(createWindowPart(buttonRect, 'button'));
+  }
+  World.add(engine.world, parts);
+  const coinValue = Math.floor(Math.random() * 40) + 10;
+  totalCoins += coinValue;
+  const coinPopup = document.createElement('div');
+  coinPopup.className = 'coin-popup';
+  coinPopup.textContent = `+${coinValue}`;
+  coinPopup.style.left = rect.left + rect.width / 2 + 'px';
+  coinPopup.style.top = rect.top + 'px';
+  document.body.appendChild(coinPopup);
+  setTimeout(() => {
+    coinPopup.remove();
+  }, 1000);
+  window.remove();
+}
+document.addEventListener('mousemove', e => {
+  if (!gameStarted) return;
+  const hammerX = e.clientX - 50;
+  const hammerY = e.clientY - 50;
+  hammerImg.style.left = hammerX + 'px';
+  hammerImg.style.top = hammerY + 'px';
+  const hammerRect = hammerImg.getBoundingClientRect();
+  document.querySelectorAll('.window:not(.hidden), .mine').forEach(element => {
+    const rect = element.getBoundingClientRect();
+    if (!(rect.right < hammerRect.left || rect.left > hammerRect.right || rect.bottom < hammerRect.top || rect.top > hammerRect.bottom)) {
+      if (element.classList.contains('mine')) {
+        takeDamage();
+        element.remove();
+        errorCount--;
+      } else {
+        explodeWindow(element);
+        errorCount--;
+      }
+    }
+  });
+});
+document.addEventListener('click', startMusicLoop, {
+  once: true
+});
+function makeWindowDraggable(element) {
+  let pos1 = 0,
+    pos2 = 0,
+    pos3 = 0,
+    pos4 = 0;
+  if (element.querySelector('.title-bar')) {
+    element.querySelector('.title-bar').onmousedown = dragMouseDown;
+  }
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    element.style.top = element.offsetTop - pos2 + "px";
+    element.style.left = element.offsetLeft - pos1 + "px";
+  }
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+let spawnInterval = 5000;
+const minInterval = 1000;
+let errorCount = 0;
+const adImages = ['/output-onlinepngtools (2).png', '/output-onlinepngtools (3) (1).png', '/output-onlinepngtools (4) (1).png', '/output-onlinepngtools (6) (1).png', '/output-onlinepngtools (7) (1).png'];
+function showTakeover() {
+  const takeover = document.createElement('div');
+  takeover.className = 'takeover';
+  takeover.textContent = `SYSTEM OVERRIDE COMPLETE
+    
+    Your device now belongs to the Advertisement Network
+    All your data has been assimilated
+    Your personal information will be used to generate targeted content
+    
+    Resistance was futile
+    
+    Welcome to your new reality`;
+  document.body.appendChild(takeover);
+}
+function spawnError() {
+  if (!gameStarted) return;
+  errorCount++;
+  if (errorCount > 30) {
+    showTakeover();
+    return;
+  }
+  launchWindow();
+}
+window.addEventListener('load', () => {
+  updateHealthDisplay();
+  document.getElementById('startButton').addEventListener('click', () => {
+    if (!gameStarted) {
+      gameStarted = true;
+      document.getElementById('startMenu').remove();
+      spawnError();
+      const spawnLoop = () => {
+        spawnError();
+        spawnInterval = Math.max(spawnInterval * 0.98, minInterval);
+        setTimeout(spawnLoop, spawnInterval);
+      };
+      setTimeout(spawnLoop, spawnInterval);
+    }
+  });
+});
+Matter.Events.on(engine, 'collisionStart', event => {
+  event.pairs.forEach(pair => {
+    const bodyA = pair.bodyA;
+    const bodyB = pair.bodyB;
+    if (bodyA === ground) {
+      World.remove(engine.world, bodyB);
+    } else if (bodyB === ground) {
+      World.remove(engine.world, bodyA);
+    }
+  });
+});
+let newError;
+let velY;
+let velX;
+let posY;
+let posX;
+let gravity = 0.5;
+function animate() {
+  velY += gravity;
+  posY += velY;
+  posX += velX;
+  if (posY < window.innerHeight) {
+    newError.style.top = posY + 'px';
+    newError.style.left = posX + 'px';
+    requestAnimationFrame(animate);
+  } else {
+    newError.remove();
+    errorCount--;
+  }
+}
+let health = 3;
+const mineChance = 0.2;
+function updateHealthDisplay() {
+  const healthBar = document.getElementById('healthBar');
+  healthBar.innerHTML = '';
+  for (let i = 0; i < health; i++) {
+    const heart = document.createElement('img');
+    heart.src = '/Hearts.png';
+    heart.className = 'heart';
+    healthBar.appendChild(heart);
+  }
+}
+function takeDamage() {
+  health--;
+  updateHealthDisplay();
+  if (health <= 0) {
+    showTakeover();
+  }
+}
+const songs = [document.getElementById('song1'), document.getElementById('song2'), document.getElementById('song3')];
+let currentlyPlaying = null;
+let musicStarted = false;
+let gameStarted = false;
+function startMusicLoop() {
+  if (!gameStarted || musicStarted) return;
+  musicStarted = true;
+  function playNextSong() {
+    if (currentlyPlaying) {
+      currentlyPlaying.pause();
+      currentlyPlaying.currentTime = 0;
+    }
+    const randomIndex = Math.floor(Math.random() * songs.length);
+    currentlyPlaying = songs[randomIndex];
+    currentlyPlaying.play();
+    currentlyPlaying.onended = playNextSong;
+  }
+  playNextSong();
+}
+document.addEventListener('click', startMusicLoop);</script>
+
+</body></html>
