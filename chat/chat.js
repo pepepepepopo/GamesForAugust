@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwHimJXM4MZCnJKr0t5Lu6IXbEymBGKAGMI5X6vO9S0J4B_dA1H9JXkDCiEqcCht5Q/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwxlJRiZkduOemZjqBFfBhsiglSvQnmVPC6N-XuFlqsZBIFU13fBMj7gOMAP8ohYjcAGA/exec";
 const badWords = ["fuck", "shit", "bitch", "ass", "cunt", "nigger", "nigga", "whore", "slut", "dick", "fag"]; // customize this
 
 function sanitize(text) {
