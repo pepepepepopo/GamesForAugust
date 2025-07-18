@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Chat Room</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Public Chat</title>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    if (!localStorage.getItem("chatUsername")) {
+      window.location.href = "username.html";
+    }
+  </script>
 </head>
 <body>
-  <h1>💬 Chat Room</h1>
-
-  <div id="messages" class="chat-messages"></div>
-
-  <input type="text" id="username" placeholder="Your name">
-  <input type="text" id="messageInput" placeholder="Your message">
+  <h1>Public Chat</h1>
+  <div id="messages"></div>
+  <input type="text" id="messageInput" placeholder="Type a message..." />
   <button onclick="sendMessage()">Send</button>
 
   <script src="chat.js"></script>
