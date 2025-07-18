@@ -1,68 +1,40 @@
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwxlJRiZkduOemZjqBFfBhsiglSvQnmVPC6N-XuFlqsZBIFU13fBMj7gOMAP8ohYjcAGA/exec'; // Replace with your GAS link
+const messageInput = document.getElementById("messageInput");
+const messagesDiv = document.getElementById("messages");
+const username = localStorage.getItem("chatUsername");
 
-// List of banned words (add more if needed)
-const bannedWords = ['fuck', 'shit', 'bitch', 'ass', 'dick', 'piss', 'cum', 'nigga', 'nigger'];
-
-// Replace bad words with ***
+const badWords = ["badword1", "badword2", "ass", "fuck", "shit", "bitch"];
 function filterBadWords(text) {
-  const wordRegex = new RegExp(`\\b(${bannedWords.join('|')})\\b`, 'gi');
-  return text.replace(wordRegex, '***');
-}
-
-// Save username to localStorage
-function saveUsername(name) {
-  localStorage.setItem('chatUsername', name);
-}
-
-function getUsername() {
-  return localStorage.getItem('chatUsername') || '';
+  return text.replace(new RegExp(badWords.join("|"), "gi"), "***");
 }
 
 function sendMessage() {
-  const usernameInput = document.getElementById("username");
-  const messageInput = document.getElementById("messageInput");
+  const message = messageInput.value.trim();
+  if (!message) return;
 
-  const username = usernameInput.value.trim();
-  const rawMessage = messageInput.value.trim();
+  const filtered = filterBadWords(message);
 
-  if (!username || !rawMessage) return;
+  fetch("https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_URL/exec", {
+    method: "POST",
+    body: JSON.stringify({ username, message: filtered }),
+    headers: { "Content-Type": "application/json" },
+  });
 
-  saveUsername(username);
-
-  const message = filterBadWords(rawMessage);
-
-  fetch(`${GAS_URL}?action=send&user=${encodeURIComponent(username)}&msg=${encodeURIComponent(message)}`)
-    .then(() => {
-      messageInput.value = '';
-      loadMessages();
-    });
+  messageInput.value = "";
 }
 
 function loadMessages() {
-  fetch(`${GAS_URL}?action=get`)
-    .then(res => res.json())
-    .then(data => {
-      const messagesDiv = document.getElementById("messages");
-      messagesDiv.innerHTML = '';
+  fetch("https://script.google.com/macros/s/AKfycbwxlJRiZkduOemZjqBFfBhsiglSvQnmVPC6N-XuFlqsZBIFU13fBMj7gOMAP8ohYjcAGA/exec")
+    .then((res) => res.json())
+    .then((data) => {
+      messagesDiv.innerHTML = "";
       data.messages.forEach(msg => {
-        const el = document.createElement("div");
-        el.innerHTML = `<strong>${escapeHTML(msg.user)}:</strong> ${escapeHTML(msg.text)}`;
-        messagesDiv.appendChild(el);
+        const p = document.createElement("p");
+        p.innerHTML = `<strong>${msg.username}</strong>: ${msg.message}`;
+        messagesDiv.appendChild(p);
       });
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
 }
 
-function escapeHTML(text) {
-  return text.replace(/[&<>'"]/g, c => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;',
-    "'": '&#39;', '"': '&quot;'
-  }[c]));
-}
-
-window.onload = () => {
-  document.getElementById("username").value = getUsername();
-  loadMessages();
-};
-
 setInterval(loadMessages, 1000);
+loadMessages();
